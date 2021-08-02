@@ -17,12 +17,11 @@ const wsServer = SocketIO(httpServer);
 wsServer.on("connection", (socket) => {
   // 프론트에서 "enter_room" 이라는 트리거작동 요청이 들어오면 작동하는 내용
 
-  socket.on("enter_room", (msg, done) => {
-    console.log("message: ", msg);
-    console.log("done: ", done);
+  socket.on("enter_room", (roomName, done) => {
+    console.log(roomName);
     // done은 작업이 완료됐다는걸 프론트 서버로 보내주는 동작임
     setTimeout(() => {
-      done();
+      done("hello from the backend");
     }, 3000);
   });
 });

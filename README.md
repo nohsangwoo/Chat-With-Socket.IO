@@ -93,3 +93,5 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 - socket.IO설치후 초기 세팅
 
 ## 2.2 Communication between Frontend and BackEnd using 'socket.IO'
+
+## 2.3 be implement to finish function to done from backend
