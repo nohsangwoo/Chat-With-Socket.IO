@@ -85,3 +85,9 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 # 1.8 Nicknames part Two
 
 - 백엔드에서 닉네임변경하는건지 메시지를 보내는건지 분기점에따라 switch문 처리한다.
+
+# 2 Socket.IO
+
+## 2.1 Installing Socket.IO
+
+- socket.IO설치후 초기 세팅
