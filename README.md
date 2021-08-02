@@ -95,3 +95,7 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 2.2 Communication between Frontend and BackEnd using 'socket.IO'
 
 ## 2.3 be implement to finish function to done from backend
+
+## 2.4 Rooms
+
+- socket.IO에서 방 만들기

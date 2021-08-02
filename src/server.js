@@ -15,14 +15,16 @@ const wsServer = SocketIO(httpServer);
 
 // 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
-  // 프론트에서 "enter_room" 이라는 트리거작동 요청이 들어오면 작동하는 내용
+  // 어떤 이벤트(트리거)가 동작했는지 동작한 이벤트 이름을 알려줌
+  socket.onAny((event) => {
+    console.log(`Socket Event: ${event}`);
+  });
 
   socket.on("enter_room", (roomName, done) => {
-    console.log(roomName);
-    // done은 작업이 완료됐다는걸 프론트 서버로 보내주는 동작임
-    setTimeout(() => {
-      done("hello from the backend");
-    }, 3000);
+    // 방을 생성하는 socketIO명령어
+    // 자세한 동작은 socket.room에 추가된 방 리스트를 연결한다.
+    socket.join(roomName);
+    done();
   });
 });
 
