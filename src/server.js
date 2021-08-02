@@ -13,6 +13,7 @@ app.get("/*", (_, res) => res.redirect("/"));
 const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
+// 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
   console.log(socket);
 });
