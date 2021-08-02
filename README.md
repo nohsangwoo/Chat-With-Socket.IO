@@ -99,3 +99,5 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 2.4 Rooms
 
 - socket.IO에서 방 만들기
+
+## 2.6 Room Notifications

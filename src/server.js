@@ -16,14 +16,38 @@ const wsServer = SocketIO(httpServer);
 // 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
   // 어떤 이벤트(트리거)가 동작했는지 동작한 이벤트 이름을 알려줌
+  console.log("id: ", socket.id);
   socket.onAny((event) => {
     console.log(`Socket Event: ${event}`);
   });
 
   socket.on("enter_room", (roomName, done) => {
     // 방을 생성하는 socketIO명령어
-    // 자세한 동작은 socket.room에 추가된 방 리스트를 연결한다.
+    // 자세한 동작은 socket.rooms에 추가된 방 리스트를 연결한다.
+    // 이때 연결방식은 {"접속한 자신의 id, 방제목"} 이렇게 두개의 값을 가진다
     socket.join(roomName);
+    console.log(socket.rooms);
+    done();
+
+    // 방을 만든직후 만든 방의 접속자에게만 프론트의 welcome트리거를 건드린다.
+    socket.to(roomName).emit("welcome");
+  });
+
+  socket.on("disconnecting", () => {
+    console.log(socket.rooms);
+    socket.rooms.forEach((room) => {
+      console.log("disconnecting room?: ", room);
+      // early return
+      // 아이디정보를 가진 첫번째 요소에서는 emit작동을 안하게 만듬
+      if (socket.id === room) {
+        return;
+      }
+      socket.to(room).emit("bye");
+    });
+  });
+
+  socket.on("new_message", (msg, room, done) => {
+    socket.to(room).emit("new_message", msg);
     done();
   });
 });
