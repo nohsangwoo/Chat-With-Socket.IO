@@ -15,7 +15,16 @@ const wsServer = SocketIO(httpServer);
 
 // 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
-  console.log(socket);
+  // 프론트에서 "enter_room" 이라는 트리거작동 요청이 들어오면 작동하는 내용
+
+  socket.on("enter_room", (msg, done) => {
+    console.log("message: ", msg);
+    console.log("done: ", done);
+    // done은 작업이 완료됐다는걸 프론트 서버로 보내주는 동작임
+    setTimeout(() => {
+      done();
+    }, 3000);
+  });
 });
 
 /*
