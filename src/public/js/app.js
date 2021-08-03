@@ -29,7 +29,7 @@ function addMessage(message) {
 // message보내는 작업
 function handleMessageSubmit(event) {
   event.preventDefault();
-  const input = room.querySelector("input");
+  const input = room.querySelector("#msg input");
   const value = input.value;
   // 내가 방안의 모든 사람에게 메시지를 보내는 작업이 백엔드에서 작업완료가 됐다면
   // 작업완료 이후 내가 보낸 메시지를 내화면에 렌더링 시켜준다
@@ -57,11 +57,11 @@ function showRoom() {
 
   // 아래내용은 한번만 실행되는것처럼 보이지만 function이 실행되고 아래내용이 사라지는게 아님
   // room태그 안의 form을 불러온다
-  const roomForm = room.querySelector("form");
+  const msgForm = room.querySelector("#msg");
   // room > form에서 submit 이벤트가 동작할시 핸들링
   // 이제 사용자가 메시지를 보내면 roomForm의 submit 이벤트가 작동함
   // 아래내용은 함수가 종료되도 계속 살아있음
-  roomForm.addEventListener("submit", handleMessageSubmit);
+  msgForm.addEventListener("submit", handleMessageSubmit);
 }
 
 // room태그의 form에서 submit 이벤트 핸들링
@@ -80,12 +80,12 @@ function handleRoomSubmit(event) {
 // welcome태그안의 form에서 submit이벤트가 동작할때 핸들링
 welcomeForm.addEventListener("submit", handleRoomSubmit);
 
-socket.on("welcome", () => {
-  addMessage("someone joined!");
+socket.on("welcome", (user) => {
+  addMessage(`${user} arrived!`);
 });
 
-socket.on("bye", () => {
-  addMessage("someone left ㅠㅠ");
+socket.on("bye", (left) => {
+  addMessage(`${left} left ㅠㅠ`);
 });
 
 socket.on("new_message", addMessage);

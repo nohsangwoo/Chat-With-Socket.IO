@@ -15,6 +15,8 @@ const wsServer = SocketIO(httpServer);
 
 // 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
+  // 임시 이름을 설정
+  socket["nickname"] = "Anon";
   // 어떤 이벤트(트리거)가 동작했는지 동작한 이벤트 이름을 알려줌
   console.log("id: ", socket.id);
   socket.onAny((event) => {
@@ -31,7 +33,8 @@ wsServer.on("connection", (socket) => {
     done();
 
     // 방을 만든직후 나를 제외한 방 안의 모든 접속자에게 프론트의 welcome트리거를 건드린다.
-    socket.to(roomName).emit("welcome");
+    // 또한 nickname변수를 같이 보낸다
+    socket.to(roomName).emit("welcome", socket.nickname);
   });
 
   // 자동으로 유저가 나가면 작동되는 트리거
@@ -42,18 +45,20 @@ wsServer.on("connection", (socket) => {
       // early return
       // 아이디정보를 가진 첫번째 요소에서는 emit작동을 안하게 만듬
       if (socket.id === room) {
-        return;
+        continue;
       }
-      socket.to(room).emit("bye");
+      socket.to(room).emit("bye", socket.nickname);
     });
   });
 
   socket.on("new_message", (msg, room, done) => {
     // 자동으로 나를 제외한 방 안의 나머지 사람들에게 데이터를 보냄
     // 나를 제외하는 타겟을 설정하기위해 filter작업을 할필요 없음(넘편함)
-    socket.to(room).emit("new_message", msg);
+    socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
+
     done();
   });
+  socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
 });
 
 /*
