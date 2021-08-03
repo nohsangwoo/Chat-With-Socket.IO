@@ -10,6 +10,7 @@ const room = document.getElementById("room");
 room.hidden = true;
 
 let roomName;
+let nickName;
 
 // 전달받은 메시지를li태그로 감싸서 ul태그 안에 추가하여 렌더링해주는 함수
 function addMessage(message) {
@@ -68,13 +69,18 @@ function showRoom() {
 function handleRoomSubmit(event) {
   event.preventDefault();
   // form안의 input제어를 위해 dom을 불러온다
-  const input = welcomeForm.querySelector("input");
+  const roomnameInput = welcomeForm.querySelector("#roomname");
+  const nicknameInput = welcomeForm.querySelector("#nickname");
+  console.log(nicknameInput);
+
   // 백엔드로 "enter_room"이라는 트리거를 작동하게 요청을 보낸다
   // 이때 데이터를 같이보낸다
   // emit의 세번째 인자엔 백엔드 서버에서 done작업 응답이 오는경우 작동하는 작업을 구현한다.
-  socket.emit("enter_room", input.value, showRoom);
-  roomName = input.value;
-  input.value = "";
+  socket.emit("enter_room", roomnameInput.value, nicknameInput.value, showRoom);
+  roomName = roomnameInput.value;
+  nickName = nicknameInput.value;
+  roomnameInput.value = "";
+  nicknameInput.value = "";
 }
 
 // welcome태그안의 form에서 submit이벤트가 동작할때 핸들링

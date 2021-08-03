@@ -105,3 +105,5 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 2.7 Nicknames
 
 - 누가 나갔는지, 누가 방에 접속했는지, 누가 보낸메시지인지 분별하기 쉽도록 nickname변수를 추가한다, 이후 사용자에게 nickname도 전달 받을수 있게 설정.
+- 코드 챌린지 : 방입장전에 닉네임 입력 같이 받아서 입장하기
+  (입장시 닉네임 입력 안받으면 Anon이라는 닉네임을 자동으로 부여받는다)

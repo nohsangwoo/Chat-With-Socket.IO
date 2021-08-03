@@ -23,7 +23,8 @@ wsServer.on("connection", (socket) => {
     console.log(`Socket Event: ${event}`);
   });
 
-  socket.on("enter_room", (roomName, done) => {
+  socket.on("enter_room", (roomName, nickName, done) => {
+    socket["nickname"] = nickName;
     // 방을 생성하는 socketIO명령어
     // 방이없으면 방을 생성하고 방이 이미 존재하면 해당 방에 참여시켜주는 기능
     // 자세한 동작은 socket.rooms에 추가된 방 리스트를 연결한다.
@@ -41,12 +42,12 @@ wsServer.on("connection", (socket) => {
   socket.on("disconnecting", () => {
     console.log(socket.rooms);
     socket.rooms.forEach((room) => {
-      console.log("disconnecting room?: ", room);
       // early return
       // 아이디정보를 가진 첫번째 요소에서는 emit작동을 안하게 만듬
       if (socket.id === room) {
-        continue;
+        return;
       }
+      console.log("disconnecting room?: ", room);
       socket.to(room).emit("bye", socket.nickname);
     });
   });
