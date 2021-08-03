@@ -71,7 +71,6 @@ function handleRoomSubmit(event) {
   // form안의 input제어를 위해 dom을 불러온다
   const roomnameInput = welcomeForm.querySelector("#roomname");
   const nicknameInput = welcomeForm.querySelector("#nickname");
-  console.log(nicknameInput);
 
   // 백엔드로 "enter_room"이라는 트리거를 작동하게 요청을 보낸다
   // 이때 데이터를 같이보낸다
@@ -95,3 +94,16 @@ socket.on("bye", (left) => {
 });
 
 socket.on("new_message", addMessage);
+
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("#welcome ul");
+  roomList.innerHTML = "";
+  if (rooms.length === 0) {
+    return;
+  }
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.appendChild(li);
+  });
+});

@@ -13,6 +13,7 @@ app.get("/*", (_, res) => res.redirect("/"));
 const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
+// 몇개의 방이 만들어졌는지 count 하는 기능
 function publicRooms() {
   const {
     sockets: {
@@ -54,6 +55,8 @@ wsServer.on("connection", (socket) => {
     // 방을 만든직후 나를 제외한 방 안의 모든 접속자에게 프론트의 welcome트리거를 건드린다.
     // 또한 nickname변수를 같이 보낸다
     socket.to(roomName).emit("welcome", socket.nickname);
+
+    wsServer.sockets.emit("room_change", publicRooms());
   });
 
   // 자동으로 유저가 나가면 작동되는 트리거
@@ -68,6 +71,10 @@ wsServer.on("connection", (socket) => {
       console.log("disconnecting room?: ", room);
       socket.to(room).emit("bye", socket.nickname);
     });
+  });
+
+  socket.on("disconnect", () => {
+    wsServer.sockets.emit("room_change", publicRooms());
   });
 
   socket.on("new_message", (msg, room, done) => {
