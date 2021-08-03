@@ -23,16 +23,18 @@ wsServer.on("connection", (socket) => {
 
   socket.on("enter_room", (roomName, done) => {
     // 방을 생성하는 socketIO명령어
+    // 방이없으면 방을 생성하고 방이 이미 존재하면 해당 방에 참여시켜주는 기능
     // 자세한 동작은 socket.rooms에 추가된 방 리스트를 연결한다.
     // 이때 연결방식은 {"접속한 자신의 id, 방제목"} 이렇게 두개의 값을 가진다
     socket.join(roomName);
     console.log(socket.rooms);
     done();
 
-    // 방을 만든직후 만든 방의 접속자에게만 프론트의 welcome트리거를 건드린다.
+    // 방을 만든직후 나를 제외한 방 안의 모든 접속자에게 프론트의 welcome트리거를 건드린다.
     socket.to(roomName).emit("welcome");
   });
 
+  // 자동으로 유저가 나가면 작동되는 트리거
   socket.on("disconnecting", () => {
     console.log(socket.rooms);
     socket.rooms.forEach((room) => {
@@ -47,6 +49,8 @@ wsServer.on("connection", (socket) => {
   });
 
   socket.on("new_message", (msg, room, done) => {
+    // 자동으로 나를 제외한 방 안의 나머지 사람들에게 데이터를 보냄
+    // 나를 제외하는 타겟을 설정하기위해 filter작업을 할필요 없음(넘편함)
     socket.to(room).emit("new_message", msg);
     done();
   });

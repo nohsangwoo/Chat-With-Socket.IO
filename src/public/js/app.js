@@ -11,7 +11,7 @@ room.hidden = true;
 
 let roomName;
 
-// 메시지 보내는 작업이 완료됐을때 작동하는 기능
+// 전달받은 메시지를li태그로 감싸서 ul태그 안에 추가하여 렌더링해주는 함수
 function addMessage(message) {
   // room태그의 ul태그를 찾아온다
   const ul = room.querySelector("ul");
@@ -31,6 +31,8 @@ function handleMessageSubmit(event) {
   event.preventDefault();
   const input = room.querySelector("input");
   const value = input.value;
+  // 내가 방안의 모든 사람에게 메시지를 보내는 작업이 백엔드에서 작업완료가 됐다면
+  // 작업완료 이후 내가 보낸 메시지를 내화면에 렌더링 시켜준다
   socket.emit("new_message", input.value, roomName, () => {
     addMessage(`You: ${value}`);
   });
@@ -41,11 +43,15 @@ function handleMessageSubmit(event) {
 // 방만들어진게 성공했을때 작동하는 함수
 function showRoom() {
   // 방이름 입력할수있는 부분을 hidden처리
+  // 방을 만들거나 참여했다면 이제는 채팅을 시작해야하는 단계니깐 방만드는 기능을 비활성화 시키는 것
   welcome.hidden = true;
+
   // 메시지 입력해서 방만드는 부분(room 아이디를 가진 태그)의 hidden은 false처리
+  // 메시지 전달 기능을 활성화 시키는것
   room.hidden = false;
 
   // room의 h3태그안에 방제목을 TEXT로 넣기
+  // 내가 만들거나 참여중인 방의 이름을 화면에 렌더링 하기 위한 것
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
 
@@ -53,6 +59,8 @@ function showRoom() {
   // room태그 안의 form을 불러온다
   const roomForm = room.querySelector("form");
   // room > form에서 submit 이벤트가 동작할시 핸들링
+  // 이제 사용자가 메시지를 보내면 roomForm의 submit 이벤트가 작동함
+  // 아래내용은 함수가 종료되도 계속 살아있음
   roomForm.addEventListener("submit", handleMessageSubmit);
 }
 
