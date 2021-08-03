@@ -126,3 +126,17 @@ DB연결해서 따로 현황 유지하던가.. 하는게 좋을듯.
 ## 2.10 User Count
 
 - 특정방에 접속해있는 유저의 수를 계산해서 표시해주는 기능
+
+## 2.11 Admin Panel
+
+- 만들어진 방 개수, 접속한 유저현황등을 표시해주는 admin 패널이다.
+- https://socket.io/docs/v4/admin-ui/
+
+- 사용법
+
+1. https://admin.socket.io 으로 접속한다.
+
+2. serverUrl을 `백엔드 서버 주소/admin` 를 입력해주고
+   http://localhost:3000/admin
+
+3. 맨 하단의 path부분을 비워주고 connect 클릭
