@@ -13,6 +13,23 @@ app.get("/*", (_, res) => res.redirect("/"));
 const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
+function publicRooms() {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = wsServer;
+  const publicRooms = [];
+
+  // 사용자키는 무시하고 방이름만 찾아서 publicRooms배열에 넣어준다.
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+  return publicRooms;
+}
+
 // 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
   // 임시 이름을 설정
@@ -20,6 +37,7 @@ wsServer.on("connection", (socket) => {
   // 어떤 이벤트(트리거)가 동작했는지 동작한 이벤트 이름을 알려줌
   console.log("id: ", socket.id);
   socket.onAny((event) => {
+    console.log(wsServer.sockets.adapter);
     console.log(`Socket Event: ${event}`);
   });
 
