@@ -31,6 +31,11 @@ function publicRooms() {
   return publicRooms;
 }
 
+// 특정 방에 접속해있는 유저의 수를 카운트 해줌
+function countRoom(roomName) {
+  return wsServer.sockets.adapter.rooms.get(roomName)?.size;
+}
+
 // 처음 client와 연결됐을때 console로 소켓정보 찍어줌
 wsServer.on("connection", (socket) => {
   // 임시 이름을 설정
@@ -54,7 +59,7 @@ wsServer.on("connection", (socket) => {
 
     // 방을 만든직후 나를 제외한 방 안의 모든 접속자에게 프론트의 welcome트리거를 건드린다.
     // 또한 nickname변수를 같이 보낸다
-    socket.to(roomName).emit("welcome", socket.nickname);
+    socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
 
     wsServer.sockets.emit("room_change", publicRooms());
   });
@@ -69,7 +74,7 @@ wsServer.on("connection", (socket) => {
         return;
       }
       console.log("disconnecting room?: ", room);
-      socket.to(room).emit("bye", socket.nickname);
+      socket.to(room).emit("bye", socket.nickname, countRoom(room) - 1);
     });
   });
 
